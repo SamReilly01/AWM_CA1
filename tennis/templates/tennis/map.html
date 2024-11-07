@@ -1,0 +1,99 @@
+{% extends 'tennis/base.html' %}
+
+{% block title %}Tennis Court Map{% endblock %}
+
+{% block content %}
+<h2>Your Location and Nearby Tennis Courts</h2>
+<div id="map" style="height: 600px;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var map = L.map('map').setView([53.281, -6.129], 12);  // Center the map around Dublin with a zoom level
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var userMarker;
+    var userCircle;
+
+    function updateMap(latitude, longitude, accuracy) {
+        if (userMarker) {
+            map.removeLayer(userMarker);
+        }
+        if (userCircle) {
+            map.removeLayer(userCircle);
+        }
+
+        userMarker = L.marker([latitude, longitude]).addTo(map)
+            .bindPopup("You are here").openPopup();
+        userCircle = L.circle([latitude, longitude], { radius: accuracy }).addTo(map);
+        map.setView([latitude, longitude], 13);
+    }
+
+    function updateLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
+                    var accuracy = position.coords.accuracy;
+
+                    updateMap(latitude, longitude, accuracy);
+
+                    // Send location to Django view
+                    fetch('{% url "tennis_update_location" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: 'latitude=' + latitude + '&longitude=' + longitude
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Location updated successfully');
+                        } else {
+                            console.error('Error updating location:', data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                    });
+                },
+                function(error) {
+                    console.error('Error getting location:', error);
+                }
+            );
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    }
+
+    // Fetch tennis court data and add markers for each court
+    fetch("{% url 'tennis_court_data' %}")
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(court => {
+                L.marker([court.latitude, court.longitude])
+                    .addTo(map)
+                    .bindPopup("<strong>" + court.name + "</strong><br>" +
+                               court.address + "<br>" +
+                               (court.phone ? "Phone: " + court.phone + "<br>" : "") +
+                               (court.email ? "Email: <a href='mailto:" + court.email + "'>" + court.email + "</a>" : "")
+                    );
+            });
+        })
+        .catch(error => {
+            console.error('Error loading tennis court data:', error);
+        });
+
+    // On page load, update the user's location
+    document.addEventListener('DOMContentLoaded', function() {
+        updateLocation();
+    });
+</script>
+{% endblock %}

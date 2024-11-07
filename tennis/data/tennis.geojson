@@ -1,0 +1,320 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": 1,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.129114988004352,
+                    53.281698192413224,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 1,
+                "Name": "Glenageary Lawn Tennis Club",
+                "Address": "Silchester Rd, Dún Laoghaire, Dublin",
+                "Phone": "01 280 8565",
+                "Email": "secretary@glenagearyltc.ie",
+                "ITM_X": 724758.2128999997,
+                "ITM_Y": 727341.7508000005
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 2,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.157156246171924,
+                    53.27250217291205,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 2,
+                "Name": "Meadowvale Tennis Club",
+                "Address": "Meadow Vale, Woodpark, Dublin",
+                "Phone": "01 2897284",
+                "Email": "committee@meadowvaletennis.net",
+                "ITM_X": 722914.8778999997,
+                "ITM_Y": 726270.0581
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 3,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.193557752151379,
+                    53.279164320812505,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 3,
+                "Name": "Leopardstown Tennis Club",
+                "Address": "Stillorgan, Dublin",
+                "Phone": null,
+                "Email": "joinltc@gmail.com",
+                "ITM_X": 720468.4468,
+                "ITM_Y": 726949.2740000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 4,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.176242162856297,
+                    53.296323327300684,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 4,
+                "Name": "Carraig Lawn Tennis Club",
+                "Address": "Rockfield Park, Blackrock, Co. Dublin",
+                "Phone": "086 221 7560",
+                "Email": "carraigtcinfo@gmail.com ",
+                "ITM_X": 721574.3532999996,
+                "ITM_Y": 728887.6390000004
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 5,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.113679018495939,
+                    53.23199254042265,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 5,
+                "Name": "Shankill Tennis Club",
+                "Address": "Shanganagh Park",
+                "Phone": "01 2825400",
+                "Email": "clubhouse@shankilltennisclub.com",
+                "ITM_X": 725933.3827,
+                "ITM_Y": 721838.8602000009
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 6,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.18728878531051,
+                    53.298513542146885,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 6,
+                "Name": "Blackrock Bowling and Tennis Club",
+                "Address": "Green Rd, Blackrock, Dublin",
+                "Phone": "01 2881933",
+                "Email": " contact@blackrockbtc.ie",
+                "ITM_X": 720831.8565999996,
+                "ITM_Y": 729112.5734999999
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 7,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.174870141820762,
+                    53.28532883625555,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 7,
+                "Name": "Newtown Park Tennis Club",
+                "Address": "Newtown Park Tennis Club",
+                "Phone": "086 0667702",
+                "Email": "newtownparktc@gmail.com",
+                "ITM_X": 721697.0530000003,
+                "ITM_Y": 727666.7754999995
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 8,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.147830400643486,
+                    53.28797490001704,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 8,
+                "Name": "Monkstown Lawn Tennis Club",
+                "Address": "St John's Park, Upper, Monkstown, Co. Dublin",
+                "Phone": "01 2842582",
+                "Email": "admin@monkstownltc.com",
+                "ITM_X": 723492.2154000001,
+                "ITM_Y": 728007.5554000009
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 10,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.117503724840273,
+                    53.28523587881447,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 10,
+                "Name": "Sandycove Tennis and Squash Club",
+                "Address": "Elton Park, Sandycove, Dublin",
+                "Phone": "01 2808769",
+                "Email": "sandycovetsc@eircom.net",
+                "ITM_X": 725522.0504000001,
+                "ITM_Y": 727755.6687000003
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 11,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.229110870180729,
+                    53.260637610253724,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 11,
+                "Name": "LC Tennis",
+                "Address": "LC Tennis, Enniskerry Rd, Sandyford, Dublin 18",
+                "Phone": "087 6480107",
+                "Email": null,
+                "ITM_X": 718148.7644999996,
+                "ITM_Y": 724828.7192000002
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 12,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.172338841577674,
+                    53.25574893380688,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 12,
+                "Name": "Carrickmines Croquet & Lawn Tennis Club",
+                "Address": "Glenamuck Road,Carrickmines, Dublin 18",
+                "Phone": "01 2891462",
+                "Email": "info@carrickmines.com",
+                "ITM_X": 721949.9837999996,
+                "ITM_Y": 724380.1702999994
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 13,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.21544123321433,
+                    53.29473703966862,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 13,
+                "Name": "Deerpark Tennis Club",
+                "Address": "Deer Park, Mount Merrion, Dublin",
+                "Phone": "01 2781466",
+                "Email": "info@deerparktennis.ie",
+                "ITM_X": 718965.9380999999,
+                "ITM_Y": 728645.1703999992
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 14,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.200361652959247,
+                    53.243442568829494,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 14,
+                "Name": "Kilternan Parish Lawn Tennis Club",
+                "Address": "Kilternan Church of Ireland, Enniskerry Rd, Dublin 18",
+                "Phone": null,
+                "Email": null,
+                "ITM_X": 720114.8169999998,
+                "ITM_Y": 722963.5820000004
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 15,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.195749655030466,
+                    53.26439026704084,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 15,
+                "Name": "Westwood Tennis Club\r\n",
+                "Address": "West Wood Club, Leopardstown Race Course, Foxrock, Dublin 18",
+                "Phone": "01 2893208",
+                "Email": "infoleopardstown@westwood.ie",
+                "ITM_X": 720363.7850000001,
+                "ITM_Y": 725301.8839999996
+            }
+        },
+        {
+            "type": "Feature",
+            "id": 18,
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -6.199492376475945,
+                    53.28654893485425,
+                    0
+                ]
+            },
+            "properties": {
+                "OBJECTID": 18,
+                "Name": "Glenalbyn Tennis Club",
+                "Address": "Glenalbyn House Stillorgan, Dublin Co. Dublin, Stillorgan",
+                "Phone": "01 288 0857",
+                "Email": "info@glenalbyntennis.com",
+                "ITM_X": null,
+                "ITM_Y": null
+            }
+        }
+    ]
+}
