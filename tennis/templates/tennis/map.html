@@ -4,12 +4,13 @@
 
 {% block content %}
 <h2>Your Location and Nearby Tennis Courts</h2>
+<input type="text" id="courtSearch" placeholder="Search for a tennis court..." style="width: 100%; padding: 8px; margin-bottom: 10px;">
 <div id="map" style="height: 600px;"></div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    var map = L.map('map').setView([53.281, -6.129], 12);  // Center the map around Dublin with a zoom level
+    var map = L.map('map').setView([53.281, -6.129], 12);  // Center the map
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -73,23 +74,39 @@
         }
     }
 
-    // Fetch tennis court data and add markers for each court
+    var courtMarkers = []; // To store court markers
+    var courtsData = []; // To store court data for search
+
+    // Function to add a marker for each court
+    function addCourtMarker(court) {
+        var marker = L.marker([court.latitude, court.longitude])
+            .addTo(map)
+            .bindPopup("<strong>" + court.name + "</strong><br>" + court.address);
+        courtMarkers.push({ marker: marker, name: court.name.toLowerCase() });
+    }
+
+    // Fetch tennis court data and create markers
     fetch("{% url 'tennis_court_data' %}")
         .then(response => response.json())
         .then(data => {
-            data.forEach(court => {
-                L.marker([court.latitude, court.longitude])
-                    .addTo(map)
-                    .bindPopup("<strong>" + court.name + "</strong><br>" +
-                               court.address + "<br>" +
-                               (court.phone ? "Phone: " + court.phone + "<br>" : "") +
-                               (court.email ? "Email: <a href='mailto:" + court.email + "'>" + court.email + "</a>" : "")
-                    );
-            });
+            courtsData = data;  // Store fetched data for search
+            courtsData.forEach(addCourtMarker);
         })
-        .catch(error => {
-            console.error('Error loading tennis court data:', error);
+        .catch(error => console.error('Error loading tennis court data:', error));
+
+    // Search functionality
+    document.getElementById('courtSearch').addEventListener('input', function(e) {
+        var searchQuery = e.target.value.toLowerCase();
+        courtMarkers.forEach(court => {
+            if (court.name.includes(searchQuery)) {
+                court.marker.setOpacity(1); // Show marker
+                map.setView(court.marker.getLatLng(), 13); // Optional: zoom to result
+                court.marker.openPopup(); // Optional: open popup
+            } else {
+                court.marker.setOpacity(0); // Hide marker
+            }
         });
+    });
 
     // On page load, update the user's location
     document.addEventListener('DOMContentLoaded', function() {

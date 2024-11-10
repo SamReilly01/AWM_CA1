@@ -1,8 +1,8 @@
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.gis.geos import Point
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
 from .models import Profile, TennisCourt  # Assuming TennisCourt model is defined
 
 User = get_user_model()
@@ -15,6 +15,18 @@ def set_user_location(user_id, latitude, longitude):
     profile.location = location
     profile.save()
     return profile
+
+# Signup view
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('tennis_map')  # Redirect to the map page or another page after signup
+    else:
+        form = UserCreationForm()
+    return render(request, 'tennis/signup.html', {'form': form})
 
 # Login view
 def login_view(request):
@@ -53,8 +65,6 @@ def tennis_court_data(request):
             'id': court.id,
             'name': court.name,
             'address': court.address,
-            # 'phone': court.phone,  # Uncomment if 'phone' exists in the model
-            # 'email': court.email,  # Uncomment if 'email' exists in the model
             'latitude': court.location.y,
             'longitude': court.location.x
         } for court in courts]
