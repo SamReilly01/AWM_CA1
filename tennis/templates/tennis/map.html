@@ -77,11 +77,13 @@
     var courtMarkers = []; // To store court markers
     var courtsData = []; // To store court data for search
 
-    // Function to add a marker for each court
+    // Function to add a marker for each court with a Google Maps link
     function addCourtMarker(court) {
         var marker = L.marker([court.latitude, court.longitude])
             .addTo(map)
-            .bindPopup("<strong>" + court.name + "</strong><br>" + court.address);
+            .bindPopup("<strong>" + court.name + "</strong><br>" +
+                       court.address + "<br>" +
+                       `<a href="https://www.google.com/maps/dir/?api=1&destination=${court.latitude},${court.longitude}" target="_blank">Get Directions</a>`);
         courtMarkers.push({ marker: marker, name: court.name.toLowerCase() });
     }
 
