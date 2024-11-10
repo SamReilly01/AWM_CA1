@@ -5,7 +5,7 @@ I've also attached a link to my docker repository: https://hub.docker.com/reposi
 # Features
 - User Authentication: Signup, login, and logout functionality
 - Geolocation: Users locations are present and so they can view nearby tennis courts.
-- Tennis Data: Displays tennis courts from a GeoJSON file with details like name and address.
+- Tennis Data: Displays tennis courts from a GeoJSON file with details like name, address and directions.
 - Interactive Map: Utilises Leaflet for map rendering with markers for hospitals and user location
 
 # App Functionality
@@ -25,7 +25,7 @@ I've also attached a link to my docker repository: https://hub.docker.com/reposi
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/a860cb88-9a95-475d-b5f0-da427f83b900">
 
 # Conclusion
-This Advanced Web Mapping project effectively showcases the powerful integration of Django for spatial data management with a Docker-based deployment, enabling a dynamic, interactive application for geographic data exploration. With features such as user authentication, geolocation and Leaflet-powered interactive maps, the project offers a practical solution for locating tennis coirts across Dublin. Supported by Docker and AWS, the deployment process is designed to be both stable and scalable, enhancing the app's overall user experience
+This Advanced Web Mapping project effectively showcases the powerful integration of Django for spatial data management with a Docker-based deployment, enabling a dynamic, interactive application for geographic data exploration. With features such as user authentication, geolocation and Leaflet-powered interactive maps, the project offers a practical solution for locating tennis courts across Dublin. Supported by Docker and AWS, the deployment process is designed to be both stable and scalable, enhancing the app's overall user experience
 
 
 
