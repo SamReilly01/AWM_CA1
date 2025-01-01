@@ -9,6 +9,8 @@ class TennisCourt(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
 
 
 User = get_user_model()

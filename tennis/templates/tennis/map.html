@@ -1,118 +1,416 @@
 {% extends 'tennis/base.html' %}
 
+
+
 {% block title %}Tennis Court Map{% endblock %}
+
+
+<style>
+    body.dark-mode {
+        background-color: #121212;
+        color: #ffffff;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+        background-color: #333333;
+        color: #ffffff;
+    }
+
+    button {
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+</style>
+
 
 {% block content %}
 <h2>Your Location and Nearby Tennis Courts</h2>
-<input type="text" id="courtSearch" placeholder="Search for a tennis court..." style="width: 100%; padding: 8px; margin-bottom: 10px;">
-<div id="map" style="height: 600px;"></div>
+
+
+
+<!-- Buttons -->
+<div style="margin-bottom: 10px;">
+    <button id="updateLocation" style="background-color: #007bff; color: white; padding: 8px; margin-right: 10px;">
+        Update Location
+    </button>
+    <button id="streetButton" style="background-color: gray; color: white; padding: 8px; margin-right: 10px;">
+        Street View
+    </button>
+    <button id="satelliteButton" style="background-color: #4c4c4c; color: white; padding: 8px; margin-right: 10px;">
+        Satellite View
+    </button>
+    <button id="darkModeButton" style="background-color: #212529; color: white; padding: 8px; margin-right: 10px;">
+        Enable Dark Mode
+    </button>
+    <button id="showFavorites" style="background-color: #17a2b8; color: white; padding: 8px;">
+        Show Favorites
+    </button>
+</div>
+
+
+<!-- Filter Dropdown -->
+<select id="courtFilter" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+    <option value="all">Show All</option>
+    <option value="public">Public Courts</option>
+    <option value="private">Private Courts</option>
+</select>
+
+<!-- Search Box -->
+<input type="text" id="courtSearch" placeholder="Search for a tennis court..."
+    style="width: 100%; padding: 8px; margin-bottom: 10px;">
+<div style="display: flex; height: 600px;">
+
+    <!-- Map Container -->
+    <div id="map" style="flex-grow: 1; position: relative;"></div>
+
+    <!-- Closest Facility Panel -->
+    <div id="closestFacility"
+        style="width: 300px; padding: 15px; margin-left: 10px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #f8f9fa;">
+        <h3>Closest Facility</h3>
+        <p id="facilityDetails">The closest facility is: LC Tennis, Enniskerry Rd, Sandyford, Dublin 18</p>
+        <p id="facilityDistance">Distance: 49.4 km, Time: 48 mins</p>
+        <button id="getRouteButton"
+            style="background-color: #6c757d; color: white; padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer;"
+            disabled>
+            Get Route
+        </button>
+    </div>
+
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
+<!-- Leaflet Routing Machine -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
 <script>
-    var map = L.map('map').setView([53.281, -6.129], 12);  // Center the map
+    var map = L.map('map').setView([53.281, -6.129], 12);
+
+    // Variables for Closest Facility
+    let closestFacility = null;
+    let closestDistance = Infinity;
+
+    // Haversine formula to calculate distance between two coordinates
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in km
+    }
+
+    // Find the closest court
+    function findClosestCourt(userLat, userLng) {
+        courtMarkers.forEach(court => {
+            const distance = calculateDistance(userLat, userLng, court.latitude, court.longitude);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestFacility = court;
+            }
+        });
+
+        // Update the closest facility display
+        if (closestFacility) {
+            document.getElementById('facilityDetails').innerText = `The closest facility is: ${closestFacility.name}, ${closestFacility.address}`;
+            document.getElementById('facilityDistance').innerText = `Distance: ${closestDistance.toFixed(2)} km`;
+            document.getElementById('getRouteButton').disabled = false; // Enable button
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Enable button just in case it was disabled
+        document.getElementById('getRouteButton').disabled = false;
+
+        // Attach the event listener
+        document.getElementById('getRouteButton').addEventListener('click', () => {
+            console.log('Route Button Clicked'); // Debugging Log
+
+            // Hardcoded LC Tennis coordinates
+            const lcTennisLat = 53.260637610253724; // Latitude
+            const lcTennisLng = -6.229110870180729; // Longitude
+            const lcTennisName = "LC Tennis";
+
+            console.log(`Routing to ${lcTennisName} at Lat: ${lcTennisLat}, Lng: ${lcTennisLng}`);
+
+            // Show route to LC Tennis
+            showRoute(lcTennisLat, lcTennisLng, lcTennisName);
+        });
+    });
+
+
+
+
+    // Check location and find closest court
+    function updateClosestFacility() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    findClosestCourt(userLat, userLng);
+                },
+                function (error) {
+                    console.error('Location error:', error);
+                    document.getElementById('facilityDetails').innerText = 'Location access denied.';
+                }
+            );
+        } else {
+            console.error('Geolocation not supported.');
+            document.getElementById('facilityDetails').innerText = 'Geolocation not supported.';
+        }
+    }
+
+
+    // Base layers
+    var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    });
+
+    var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        attribution: '© Google Maps'
+    });
+
+    // Default to OSM layer
+    osmLayer.addTo(map);
+
+    var darkModeLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    });
+
+    // Switch to Satellite View
+    document.getElementById('satelliteButton').addEventListener('click', () => {
+        map.removeLayer(osmLayer);      // Remove street view layer
+        map.addLayer(satelliteLayer);  // Add satellite layer
+    });
+
+    // Switch to Street View
+    document.getElementById('streetButton').addEventListener('click', () => {
+        map.removeLayer(satelliteLayer);  // Remove satellite layer
+        map.addLayer(osmLayer);           // Add street view layer
+    });
+
+    // Toggle Dark Mode
+    document.getElementById('darkModeButton').addEventListener('click', () => {
+        if (map.hasLayer(darkModeLayer)) {
+            map.removeLayer(darkModeLayer);    // Remove dark mode
+            map.addLayer(osmLayer);           // Return to default map
+            document.getElementById('darkModeButton').innerText = 'Enable Dark Mode';
+        } else {
+            map.removeLayer(osmLayer);        // Remove default map
+            map.addLayer(darkModeLayer);      // Enable dark mode
+            document.getElementById('darkModeButton').innerText = 'Disable Dark Mode';
+        }
+    });
+
+
+    var userMarker, userCircle, routingControl;
+    var courtMarkers = [];
+    var favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    var showingFavorites = false;
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    var userMarker;
-    var userCircle;
+    // Update user location
+    function updateMap(lat, lng, accuracy) {
+        if (userMarker) map.removeLayer(userMarker);
+        if (userCircle) map.removeLayer(userCircle);
 
-    function updateMap(latitude, longitude, accuracy) {
-        if (userMarker) {
-            map.removeLayer(userMarker);
-        }
-        if (userCircle) {
-            map.removeLayer(userCircle);
-        }
+        // Use custom icon for the user marker
+        const userIcon = L.icon({
+            iconUrl: '/static/images/mylocation.png', // Path to your marker image
+            iconSize: [38, 55],                      // Size of the icon
+            iconAnchor: [19, 55],                    // Point where the icon is anchored
+            popupAnchor: [0, -55]                    // Point where the popup should open
+        });
 
-        userMarker = L.marker([latitude, longitude]).addTo(map)
-            .bindPopup("You are here").openPopup();
-        userCircle = L.circle([latitude, longitude], { radius: accuracy }).addTo(map);
-        map.setView([latitude, longitude], 13);
+        userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map)
+            .bindPopup("You are here")
+            .openPopup();
+
+        userCircle = L.circle([lat, lng], { radius: accuracy }).addTo(map);
+        map.setView([lat, lng], 13);
     }
+
 
     function updateLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                function(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
-                    var accuracy = position.coords.accuracy;
-
-                    updateMap(latitude, longitude, accuracy);
-
-                    // Send location to Django view
-                    fetch('{% url "tennis_update_location" %}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        body: 'latitude=' + latitude + '&longitude=' + longitude
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            console.log('Location updated successfully');
-                        } else {
-                            console.error('Error updating location:', data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                    });
+                function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+                    updateMap(lat, lng, accuracy);
                 },
-                function(error) {
-                    console.error('Error getting location:', error);
+                function (error) {
+                    console.error('Location error:', error);
                 }
             );
         } else {
-            console.error('Geolocation is not supported by this browser.');
+            console.error('Geolocation not supported.');
         }
     }
 
-    var courtMarkers = []; // To store court markers
-    var courtsData = []; // To store court data for search
+    // Show route
+    function showRoute(destinationLat, destinationLng, courtName) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
 
-    // Function to add a marker for each court with a Google Maps link
-    function addCourtMarker(court) {
-        var marker = L.marker([court.latitude, court.longitude])
-            .addTo(map)
-            .bindPopup("<strong>" + court.name + "</strong><br>" +
-                       court.address + "<br>" +
-                       `<a href="https://www.google.com/maps/dir/?api=1&destination=${court.latitude},${court.longitude}" target="_blank">Get Directions</a>`);
-        courtMarkers.push({ marker: marker, name: court.name.toLowerCase() });
+                removeRoute();
+
+                routingControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLng),
+                        L.latLng(destinationLat, destinationLng)
+                    ],
+                    routeWhileDragging: true,
+                    lineOptions: { styles: [{ color: '#4ca484', weight: 5 }] },
+                    createMarker: function () { return null; }
+                }).addTo(map);
+
+                addCloseButton();
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
     }
 
-    // Fetch tennis court data and create markers
-    fetch("{% url 'tennis_court_data' %}")
-        .then(response => response.json())
-        .then(data => {
-            courtsData = data;  // Store fetched data for search
-            courtsData.forEach(addCourtMarker);
-        })
-        .catch(error => console.error('Error loading tennis court data:', error));
+    function removeRoute() {
+        if (routingControl) {
+            map.removeControl(routingControl);
+            routingControl = null;
+        }
+        const closeButton = document.getElementById('closeRouteButton');
+        if (closeButton) closeButton.remove();
+    }
 
-    // Search functionality
-    document.getElementById('courtSearch').addEventListener('input', function(e) {
-        var searchQuery = e.target.value.toLowerCase();
+    function addCloseButton() {
+        const existingButton = document.getElementById('closeRouteButton');
+        if (existingButton) existingButton.remove();
+
+        const closeButton = document.createElement('button');
+        closeButton.id = 'closeRouteButton';
+        closeButton.innerText = 'Close Route';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.left = '10px';
+        closeButton.style.padding = '8px 12px';
+        closeButton.style.backgroundColor = '#ff4d4d';
+        closeButton.style.color = '#ffffff';
+        closeButton.style.border = 'none';
+        closeButton.style.borderRadius = '5px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.zIndex = 1000;
+        closeButton.onclick = removeRoute;
+
+        document.getElementById('map').appendChild(closeButton);
+    }
+
+
+
+    function addCourtMarker(court) {
+        const type = Math.random() > 0.5 ? 'public' : 'private';
+        const isFavorite = favorites.some(fav => fav.name === court.name);
+
+        const marker = L.marker([court.latitude, court.longitude])
+            .addTo(map)
+            .bindPopup(function () {
+                const favText = isFavorite ? 'Remove from Favorites' : 'Add to Favorites';
+                const courtString = encodeURIComponent(JSON.stringify(court));
+
+                // Dynamically returning the popup content
+                return `
+                <strong>${court.name}</strong><br>${court.address}<br>
+                <button onclick="showRoute(${court.latitude}, ${court.longitude}, '${court.name}')">Get Directions</button>
+                <button onclick="toggleFavorite('${courtString}', this)">${favText}</button>
+            `;
+            });
+
+        courtMarkers.push({ marker, ...court, type });
+    }
+
+    // Toggle favorites and update the marker's popup content
+    function toggleFavorite(courtString, button) {
+        const court = JSON.parse(decodeURIComponent(courtString));
+        const index = favorites.findIndex(fav => fav.name === court.name);
+
+        // Add or remove from favorites
+        if (index > -1) {
+            favorites.splice(index, 1);
+        } else {
+            favorites.push(court);
+        }
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+
+        // Get the marker from the button's parent and update the popup content
+        const marker = button.closest('.leaflet-popup')._source;
+
+        // Determine the new favorite status
+        const isFavorite = favorites.some(fav => fav.name === court.name);
+
+        // Update the popup content
+        marker.setPopupContent(function () {
+            return `
+            <strong>${court.name}</strong><br>${court.address}<br>
+            <button onclick="showRoute(${court.latitude}, ${court.longitude}, '${court.name}')">Get Directions</button>
+            <button onclick="toggleFavorite('${encodeURIComponent(JSON.stringify(court))}', this)">${isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</button>
+        `;
+        });
+
+        // Re-apply the filter to update visible courts
+        filterCourts();
+    }
+
+
+
+
+    function filterCourts() {
+        const filterType = document.getElementById('courtFilter').value;
+        const query = document.getElementById('courtSearch').value.toLowerCase();
+
         courtMarkers.forEach(court => {
-            if (court.name.includes(searchQuery)) {
-                court.marker.setOpacity(1); // Show marker
-                map.setView(court.marker.getLatLng(), 13); // Optional: zoom to result
-                court.marker.openPopup(); // Optional: open popup
+            const matchesType = filterType === 'all' || court.type === filterType;
+            const matchesSearch = court.name.toLowerCase().includes(query);
+            const matchesFavorites = showingFavorites ? favorites.some(fav => fav.name === court.name) : true;
+
+            if (matchesType && matchesSearch && matchesFavorites) {
+                court.marker.addTo(map);
             } else {
-                court.marker.setOpacity(0); // Hide marker
+                map.removeLayer(court.marker);
             }
         });
+    }
+
+    fetch("{% url 'tennis_court_data' %}")
+        .then(response => response.json())
+        .then(data => data.forEach(addCourtMarker))
+        .catch(error => console.error('Error:', error));
+
+    document.getElementById('showFavorites').addEventListener('click', () => {
+        showingFavorites = !showingFavorites;
+        filterCourts();
     });
 
-    // On page load, update the user's location
-    document.addEventListener('DOMContentLoaded', function() {
-        updateLocation();
-    });
+    document.getElementById('courtFilter').addEventListener('change', filterCourts);
+    document.getElementById('courtSearch').addEventListener('input', filterCourts);
+    document.getElementById('updateLocation').addEventListener('click', updateLocation);
+    document.addEventListener('DOMContentLoaded', updateLocation);
 </script>
 {% endblock %}

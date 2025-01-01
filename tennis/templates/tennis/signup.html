@@ -2,16 +2,120 @@
 
 {% block title %}Sign Up{% endblock %}
 
+{% block container_class %}form-wrapper{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2>Sign Up</h2>
+<style>
+    /* Reset all padding, margins, and box styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Ensure body and html take full height */
+    html, body {
+        height: 100%;
+        background: #f7f9fc; /* Light gray background */
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Center the form wrapper */
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Full viewport height */
+        padding: 0;
+        background: #f7f9fc; /* Match page background */
+    }
+
+    /* Signup Box */
+    .container {
+        padding: 25px;
+        width: 400px; /* Fixed width */
+        background: #ffffff; /* White box for form */
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    h2 {
+        color: #333;
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background: linear-gradient(135deg, #4ca484, #388e6b);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .btn-register:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #388e6b, #4ca484);
+    }
+
+    .link-text {
+        margin-top: 10px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .link-text a {
+        color: #4ca484;
+        text-decoration: none;
+    }
+
+    .link-text a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<!-- Signup Form -->
+<div class="form-wrapper">
+    <div class="container">
+        <h2>Create Your Account</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Sign Up</button>
+            
+            <!-- Username -->
+            <input type="text" name="username" placeholder="Username" class="form-control" required>
+            
+            <!-- Email -->
+            <input type="email" name="email" placeholder="Email" class="form-control" required>
+
+            <!-- Password -->
+            <input type="password" name="password1" placeholder="Password" class="form-control" required>
+
+            <!-- Confirm Password -->
+            <input type="password" name="password2" placeholder="Confirm Password" class="form-control" required>
+            
+            <!-- Register Button -->
+            <button type="submit" class="btn-register">Register</button>
         </form>
-        <p class="mt-3">Already have an account? <a href="{% url 'tennis_login' %}">Login</a></p>
+
+        <!-- Login Link -->
+        <p class="link-text">
+            Already have an account? <a href="{% url 'tennis_login' %}">Login here</a>
+        </p>
     </div>
 </div>
 {% endblock %}

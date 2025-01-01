@@ -2,16 +2,100 @@
 
 {% block title %}Login{% endblock %}
 
+{% block container_class %}form-wrapper{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
+<style>
+    /* Ensure full height for page */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #f7f9fc; /* Match background */
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Center form wrapper */
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Full viewport height */
+        padding: 0;
+        background: #f7f9fc; /* Match page background */
+    }
+
+    /* Form Box */
+    .container {
+        padding: 25px;
+        width: 400px; /* Fixed width */
+        background: #ffffff; /* White box for form */
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        background: linear-gradient(135deg, #4ca484, #388e6b);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .btn-login:hover {
+        transform: scale(1.05);
+    }
+
+    .link-text {
+        margin-top: 10px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .link-text a {
+        color: #4ca484;
+        text-decoration: none;
+    }
+
+    .link-text a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="form-wrapper">
+    <div class="container">
         <h2>Login</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Login</button>
+            <!-- Username -->
+            <input type="text" name="username" placeholder="Username" class="form-control" required>
+            <!-- Password -->
+            <input type="password" name="password" placeholder="Password" class="form-control" required>
+            <!-- Login Button -->
+            <button type="submit" class="btn-login">Login</button>
         </form>
-        <p class="mt-3">Don't have an account? <a href="{% url 'tennis_signup' %}">Signup</a></p>
+        <!-- Signup Link -->
+        <p class="link-text">
+            Don't have an account? <a href="{% url 'tennis_signup' %}">Signup here</a>
+        </p>
     </div>
 </div>
 {% endblock %}

@@ -35,7 +35,7 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <div class="{% block container_class %}container mt-4{% endblock %}">
         {% block content %}{% endblock %}
     </div>
 

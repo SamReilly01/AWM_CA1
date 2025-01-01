@@ -138,6 +138,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
+
+
 STATIC_URL = 'static/'
 
 if socket.gethostname() == 'SamR01':
