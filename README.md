@@ -59,7 +59,7 @@ I also created an **ENV.yml** file by running this command (made some modificati
 conda env export --from-hisory > ENV.yml
 ```
 
-I used the following commands to build the backend and frontend images for my project:
+I used the following commands to build the images for my project:
 ```
 docker build -t geodjango_tutorial_image .
 ```
@@ -72,11 +72,11 @@ After coding and creating all the app's functionality (app functionality will be
 
 I started by rebuilding the images by using this command:
 ```
-docker build -t c21373633/geodjango_tutorial_image:latest .
+docker build -t samr99/geodjango_tutorial_image:latest .
 ```
 Then I pushed the built the images onto the docker repository by using this command:
 ```
-docker push c21373633/geodjango_tutorial_image:latest
+docker push samr99/geodjango_tutorial_image:latest
 ```
 After pushing the latest version of the images to the docker repository, I created an instance using AWS cloud services and connected to it.
 
@@ -93,7 +93,7 @@ sudo nano Dockerfile
 ```
 * **Step 3:** I then pulled my images from my docker repository using this command:
 ```
-docker pull c21373633/geodjango_tutorial_image:latest
+docker pull samr99/geodjango_tutorial_image:latest
 ```
 * **Step 4:** After pulling the images, I created the four containers (**pgadmin**, **postgis**, **nginx**, and **awm_django_app**) essential for deploying my web application, I then started all the containers, here are the commands I used:
 ```
